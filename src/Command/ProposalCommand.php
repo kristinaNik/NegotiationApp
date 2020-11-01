@@ -3,7 +3,6 @@
 namespace App\Command;
 
 use App\Services\EvaluationService;
-use mysql_xdevapi\Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -11,23 +10,33 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ProposalCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'proposal:negotiate';
 
-
-
+    /**
+     * @var EvaluationService
+     */
     private $evaluationService;
 
+    /**
+     * ProposalCommand constructor.
+     * @param EvaluationService $evaluationService
+     */
     public function __construct( EvaluationService $evaluationService)
     {
         parent::__construct();
         $this->evaluationService = $evaluationService;
     }
 
+    /**
+     * Description of command
+     */
     protected function configure()
     {
         $this
             ->setDescription('Choose pc and give a score for each proposal')
-
         ;
     }
 
