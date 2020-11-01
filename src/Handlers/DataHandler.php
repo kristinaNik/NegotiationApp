@@ -7,19 +7,19 @@ namespace App\Handlers;
 class DataHandler
 {
     /**
+     * @param $data
      * @return array
      */
-    public function prepareData($file) :array
+    public function prepareData($data) :array
     {
-        list($pc, $processor, $screenResolution, $ram, $certified, $price) = $file;
+        $explodeData = explode(',', $data);
+        list($processor, $screenResolution, $ram, $certified) = $explodeData;
 
         return [
-            'pc'  => $pc,
-            'processor' => $processor,
-            'screenResolution' => $screenResolution,
-            'ram' => $ram,
-            'certified' => $certified,
-            'price'=> $price,
+            'processor' => (int)$processor,
+            'screenResolution' => (int)$screenResolution,
+            'ram' => (int)$ram,
+            'certified' => (int)$certified,
         ];
     }
 

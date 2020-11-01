@@ -2,13 +2,10 @@
 
 namespace App\Command;
 
-use App\Handlers\DataHandler;
 use App\Handlers\FileHandler;
-use App\Services\ProposalService;
+use App\Services\EvaluationService;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -22,21 +19,19 @@ class ProposalCommand extends Command
     private $fileHandler;
 
 
-    private $proposalService;
+    private $evaluationService;
 
-    public function __construct(FileHandler $fileHandler, ProposalService $proposalService)
+    public function __construct(FileHandler $fileHandler, EvaluationService $evaluationService)
     {
         parent::__construct();
         $this->fileHandler = $fileHandler;
-        $this->proposalService = $proposalService;
+        $this->evaluationService = $evaluationService;
     }
 
     protected function configure()
     {
         $this
             ->setDescription('Choose pc and give a score for each proposal')
-            ->addArgument('pc', InputArgument::REQUIRED, 'Dell')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
 
         ;
     }
@@ -50,15 +45,30 @@ class ProposalCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $choosePc = $input->getArgument('pc');
 
-        $this->proposalService->setData($this->fileHandler->getCsvData());
+        $proposalScores = [];
+        for ($i=1; $i<=3; $i++) {
+            $pc = $io->choice('Choose pc to evaluate', ['Dell', 'Lenovo', 'Asus']);
+            $proposalScores[$pc] = $io->ask("Set scores for processor, screen, ram, certified");
+        }
 
-        $check = $this->proposalService->checkProposalArgument($choosePc);
+        $this->evaluationService->setScoreCriteria($proposalScores);
+        $getTotal = $this->evaluationService->calculateScoreTotal();
+        $evaluate = $this->evaluationService->evaluateMaxScore($getTotal);
 
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success($this->displayResult($evaluate));
 
         return Command::SUCCESS;
+    }
+
+    private function displayResult($evaluate)
+    {
+        $output = '';
+
+        foreach ($evaluate as $pc => $score) {
+            $output =  sprintf('The preferred proposal is %s  with a score %s', $pc, $score);
+        }
+
+        return $output;
     }
 }

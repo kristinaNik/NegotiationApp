@@ -15,9 +15,9 @@ class ScoreFactory
      * @param $price
      * @return Score
      */
-    public static function create($processor, $screen, $ram, $certified, $price): Score
+    public static function create($processor, $screen, $ram, $certified): Score
     {
-        return new Score($processor, $screen, $ram, $certified, $price);
+        return new Score($processor, $screen, $ram, $certified);
 
     }
 

@@ -28,25 +28,18 @@ class Score
     private $certified;
 
     /**
-     * @var int
-     */
-    private $price;
-
-    /**
      * Score constructor.
      * @param int $processor
      * @param int $screen
      * @param int $ram
      * @param int $certified
-     * @param int $price
      */
-    public function __construct(int $processor, int $screen, int $ram, int $certified, int $price)
+    public function __construct(int $processor, int $screen, int $ram, int $certified)
     {
         $this->processor = $processor;
         $this->screen = $screen;
         $this->ram = $ram;
         $this->certified= $certified;
-        $this->price = $price;
     }
 
     /**
@@ -81,12 +74,5 @@ class Score
         return $this->certified;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPrice(): int
-    {
-        return $this->price;
-    }
 
 }
