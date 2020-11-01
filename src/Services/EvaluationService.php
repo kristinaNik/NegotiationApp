@@ -51,15 +51,15 @@ class EvaluationService
      */
     public function calculateScoreTotal(): array
     {
+
         $totals = [];
-        $sum = 0;
         foreach ($this->scores as $pc => $score) {
-            $processor = ($score->getProcessor() * ($this->criteria->getProcessorWeight()/100))*100;
-            $screen =  ($score->getScreen() * $this->criteria->getScreenResolutionWeight()/100)*100;
+            $processor = ($score->getProcessor() * ($this->criteria->getProcessorWeight()/100)*100);
+            $screen =  ($score->getScreen() * ($this->criteria->getScreenResolutionWeight()/100)*100);
             $ram = ($score->getRam() * ($this->criteria->getRamWeight()/100) *100);
             $certified = ($score->getCertified() * ($this->criteria->getCertifiedWeight()/100)*100);
 
-            $sum += $processor + $screen + $ram + $certified;
+            $sum = $processor + $screen + $ram + $certified;
 
             $totals[$pc] = $sum;
         }
