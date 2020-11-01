@@ -39,18 +39,23 @@ class ProposalCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $io->listing(['Dell - i7, Quadcore 2,3 GHz, full HD, 16 Gb RAM, energy star 100 certified - 2500 €',
+            'Lenovo - i5, Quadcore 2,2 GHz, full HD, 8 GB RAM, energy star 100 certified- 2300 €',
+            'Asus - i7, Quadcore 2,1 GHz, Ultra HD, 8 GB RAM, energy star 80 certified- 2000 €']);
+
         $proposalScores = [];
-        $prices = [];
+        $prices = [
+            'Dell' => 2500,
+            'Lenovo' => 2300,
+            'Asus' => 2000
+        ];
+
         for ($i=1; $i<=3; $i++) {
-            $io->listing(['Dell - i7, Quadcore 2,3 GHz, full HD, 16 Gb RAM, energy star 100 certified',
-                'Lenovo - i5, Quadcore 2,2 GHz, full HD, 8 GB RAM, energy star 100 certified',
-                'Asus - i7, Quadcore 2,1 GHz, Ultra HD, 8 GB RAM, energy star 80 certified']);
             $pc = $io->choice('Choose pc to evaluate', ['Dell', 'Lenovo', 'Asus']);
-            $prices[$pc] = (int)$io->ask("Enter price of product");
             $proposalScores[$pc] = $io->ask("Set scores for processor, screen, ram, certified");
         }
-        $this->evaluationService->setScoreCriteria($proposalScores);
 
+        $this->evaluationService->setScoreCriteria($proposalScores);
         $getPrice = $this->evaluationService->calculatePrice($prices);
         $getTotal = $this->evaluationService->calculateScoreTotal($getPrice);
         $evaluate = $this->evaluationService->evaluateMaxScore($getTotal);

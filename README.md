@@ -11,14 +11,16 @@ Steps to run:
     2) bin/console proposal:negotiate
     
 ### Example
+
+ * `Dell - i7, Quadcore 2,3 GHz, full HD, 16 Gb RAM, energy star 100 certified - 2500 €`
+ * `Lenovo - i5, Quadcore 2,2 GHz, full HD, 8 GB RAM, energy star 100 certified- 2300 €`
+ * `Asus - i7, Quadcore 2,1 GHz, Ultra HD, 8 GB RAM, energy star 80 certified- 2000 €`
+
    Choose pc to evaluate:
     [0] Dell
     [1] Lenovo
     [2] Asus
    > 0
-  
-   Enter price of product:
-   > 2500 
   
    Set scores for processor, screen, ram, certified:
    > 5,3,5,5
@@ -29,9 +31,6 @@ Steps to run:
     [2] Asus
    > 1
   
-   Enter price of product:
-   > 2300
-  
    Set scores for processor, screen, ram, certified:
    > 2,3,4,5
   
@@ -41,15 +40,8 @@ Steps to run:
     [2] Asus
    > 2
   
-   Enter price of product:
-   > 2000
-  
    Set scores for processor, screen, ram, certified:
    > 5,5,3,3
   
                                                                                                                           
    [OK] The preferred proposal is Asus  with a score 270
-
-
-
- 
