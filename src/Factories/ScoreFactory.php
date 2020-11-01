@@ -1,8 +1,9 @@
 <?php
 
 
-namespace App\Models;
+namespace App\Factories;
 
+use App\Models\Score;
 
 class ScoreFactory
 {
@@ -12,7 +13,6 @@ class ScoreFactory
      * @param $screen
      * @param $ram
      * @param $certified
-     * @param $price
      * @return Score
      */
     public static function create($processor, $screen, $ram, $certified): Score

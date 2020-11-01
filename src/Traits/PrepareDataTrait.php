@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Handlers;
+namespace App\Traits;
 
 
-class DataHandler
+trait PrepareDataTrait
 {
     /**
      * @param $data

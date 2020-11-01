@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Handlers\FileHandler;
 use App\Services\EvaluationService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,18 +12,13 @@ class ProposalCommand extends Command
 {
     protected static $defaultName = 'proposal:negotiate';
 
-    /**
-     * @var FileHandler
-     */
-    private $fileHandler;
 
 
     private $evaluationService;
 
-    public function __construct(FileHandler $fileHandler, EvaluationService $evaluationService)
+    public function __construct( EvaluationService $evaluationService)
     {
         parent::__construct();
-        $this->fileHandler = $fileHandler;
         $this->evaluationService = $evaluationService;
     }
 
@@ -45,7 +39,6 @@ class ProposalCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-
         $proposalScores = [];
         for ($i=1; $i<=3; $i++) {
             $pc = $io->choice('Choose pc to evaluate', ['Dell', 'Lenovo', 'Asus']);
@@ -53,6 +46,7 @@ class ProposalCommand extends Command
         }
 
         $this->evaluationService->setScoreCriteria($proposalScores);
+
         $getTotal = $this->evaluationService->calculateScoreTotal();
         $evaluate = $this->evaluationService->evaluateMaxScore($getTotal);
 

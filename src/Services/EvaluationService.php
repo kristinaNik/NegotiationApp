@@ -3,15 +3,32 @@
 
 namespace App\Services;
 
-use App\Handlers\DataHandler;
-use App\Models\ScoreFactory;
+use App\Factories\CriteriaFactory;
+use App\Factories\ScoreFactory;
+use App\Traits\PrepareDataTrait;
 
-class EvaluationService extends DataHandler
+class EvaluationService
 {
+    use PrepareDataTrait;
+
+
     /**
      * @var
      */
     private $scores = [];
+
+    /**
+     * @var array
+     */
+    private $criteria;
+
+    /**
+     * EvaluationService constructor.
+     */
+    public function __construct()
+    {
+        $this->criteria = CriteriaFactory::create(15, 10,10,5);
+    }
 
     /**
      * @param $proposals
@@ -37,7 +54,12 @@ class EvaluationService extends DataHandler
         $totals = [];
         $sum = 0;
         foreach ($this->scores as $pc => $score) {
-            $sum += $score->getProcessor() + $score->getScreen() + $score->getRam() + $score->getCertified();
+            $processor = ($score->getProcessor() * ($this->criteria->getProcessorWeight()/100))*100;
+            $screen =  ($score->getScreen() * $this->criteria->getScreenResolutionWeight()/100)*100;
+            $ram = ($score->getRam() * ($this->criteria->getRamWeight()/100) *100);
+            $certified = ($score->getCertified() * ($this->criteria->getCertifiedWeight()/100)*100);
+
+            $sum += $processor + $screen + $ram + $certified;
 
             $totals[$pc] = $sum;
         }
