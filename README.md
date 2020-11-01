@@ -7,8 +7,9 @@ The app chooses the best proposal and displays it
 
 Steps to run:
 
-    1) composer install
-    2) bin/console proposal:negotiate
+    1) copy .env.local content to your .env file
+    2) composer install
+    3) run command - bin/console proposal:negotiate
     
 ### Example
 
