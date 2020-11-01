@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Services\EvaluationService;
+use mysql_xdevapi\Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -52,7 +53,10 @@ class ProposalCommand extends Command
 
         for ($i=1; $i<=3; $i++) {
             $pc = $io->choice('Choose pc to evaluate', ['Dell', 'Lenovo', 'Asus']);
-            $proposalScores[$pc] = $io->ask("Set scores for processor, screen, ram, certified");
+            $scores = $io->ask("Set scores for processor, screen, ram, certified");
+            if ($this->checkScoresIsValid($scores)) {
+                $proposalScores[$pc] = $scores;
+            }
         }
 
         $this->evaluationService->setScoreCriteria($proposalScores);
@@ -65,10 +69,29 @@ class ProposalCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function displayResult($evaluate)
+
+    /**
+     * @param $scores
+     * @return bool
+     * @throws \Exception
+     */
+    private function checkScoresIsValid($scores): bool
+    {
+       $explodeScores = explode(',',$scores);
+       if (count($explodeScores) != 4) {
+           throw new \Exception("You must enter 4 scores with comma separators");
+       }
+
+       return true;
+    }
+
+    /**
+     * @param $evaluate
+     * @return string
+     */
+    private function displayResult($evaluate): string
     {
         $output = '';
-
         foreach ($evaluate as $pc => $score) {
             $output =  sprintf('The preferred proposal is %s  with a score %s', $pc, $score);
         }

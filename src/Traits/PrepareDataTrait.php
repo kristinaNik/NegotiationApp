@@ -10,7 +10,7 @@ trait PrepareDataTrait
      * @param $data
      * @return array
      */
-    public function prepareData($data) :array
+    public function prepareData($data): array
     {
         $explodeData = explode(',', $data);
         list($processor, $screenResolution, $ram, $certified) = $explodeData;

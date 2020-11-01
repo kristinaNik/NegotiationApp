@@ -53,9 +53,9 @@ class EvaluationService
     public function calculateScoreTotal($prices): array
     {
         $totals = [];
-        foreach ($this->scores as $pc => $score) {
-            foreach ($prices as $pcName => $price) {
-                if ($pcName === $pc) {
+        foreach ($this->scores as $scorePcName => $score) {
+            foreach ($prices as $pricePcName => $price) {
+                if ($scorePcName === $pricePcName) {
                     $processor = ($score->getProcessor() * ($this->criteria->getProcessorWeight()/100)*100);
                     $screen =  ($score->getScreen() * ($this->criteria->getScreenResolutionWeight()/100)*100);
                     $ram = ($score->getRam() * ($this->criteria->getRamWeight()/100) *100);
@@ -63,7 +63,7 @@ class EvaluationService
 
                     $sum = $processor + $screen + $ram + $certified + $price;
 
-                    $totals[$pc] = $sum;
+                    $totals[$pricePcName] = $sum;
                 }
             }
 
