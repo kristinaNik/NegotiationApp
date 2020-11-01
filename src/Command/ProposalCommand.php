@@ -40,14 +40,16 @@ class ProposalCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $proposalScores = [];
+        $prices = [];
         for ($i=1; $i<=3; $i++) {
             $pc = $io->choice('Choose pc to evaluate', ['Dell', 'Lenovo', 'Asus']);
+            $prices[$pc] = (int)$io->ask("Enter price of product");
             $proposalScores[$pc] = $io->ask("Set scores for processor, screen, ram, certified");
         }
-
         $this->evaluationService->setScoreCriteria($proposalScores);
 
-        $getTotal = $this->evaluationService->calculateScoreTotal();
+        $getPrice = $this->evaluationService->calculatePrice($prices);
+        $getTotal = $this->evaluationService->calculateScoreTotal($getPrice);
         $evaluate = $this->evaluationService->evaluateMaxScore($getTotal);
 
         $io->success($this->displayResult($evaluate));

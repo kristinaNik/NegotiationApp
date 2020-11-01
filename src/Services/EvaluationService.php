@@ -35,9 +35,9 @@ class EvaluationService
      */
     public function setScoreCriteria($proposals): void
     {
-        foreach ($proposals as $key => $proposal) {
-            $preparedData = $this->prepareData($proposal);
-            $this->scores[$key] = ScoreFactory::create($preparedData['processor'],
+        foreach ($proposals as $pc => $scores) {
+            $preparedData = $this->prepareData($scores);
+            $this->scores[$pc] = ScoreFactory::create($preparedData['processor'],
                 $preparedData['screenResolution'],
                 $preparedData['ram'],
                 $preparedData['certified']);
@@ -47,25 +47,46 @@ class EvaluationService
     }
 
     /**
+     * @param $prices
      * @return array
      */
-    public function calculateScoreTotal(): array
+    public function calculateScoreTotal($prices): array
     {
-
         $totals = [];
         foreach ($this->scores as $pc => $score) {
-            $processor = ($score->getProcessor() * ($this->criteria->getProcessorWeight()/100)*100);
-            $screen =  ($score->getScreen() * ($this->criteria->getScreenResolutionWeight()/100)*100);
-            $ram = ($score->getRam() * ($this->criteria->getRamWeight()/100) *100);
-            $certified = ($score->getCertified() * ($this->criteria->getCertifiedWeight()/100)*100);
+            foreach ($prices as $pcName => $price) {
+                if ($pcName === $pc) {
+                    $processor = ($score->getProcessor() * ($this->criteria->getProcessorWeight()/100)*100);
+                    $screen =  ($score->getScreen() * ($this->criteria->getScreenResolutionWeight()/100)*100);
+                    $ram = ($score->getRam() * ($this->criteria->getRamWeight()/100) *100);
+                    $certified = ($score->getCertified() * ($this->criteria->getCertifiedWeight()/100)*100);
 
-            $sum = $processor + $screen + $ram + $certified;
+                    $sum = $processor + $screen + $ram + $certified + $price;
 
-            $totals[$pc] = $sum;
+                    $totals[$pc] = $sum;
+                }
+            }
+
         }
 
         return $totals;
 
+    }
+
+    /**
+     * @param $prices
+     * @return array
+     */
+    public function calculatePrice($prices): array
+    {
+        $totals = [];
+        $minPrice = min($prices);
+        foreach ($prices as $pc => $price) {
+            $pp = 100 * ($minPrice/$price);
+            $totals[$pc] = round($pp,0);
+        }
+
+        return $totals;
     }
 
     /**
