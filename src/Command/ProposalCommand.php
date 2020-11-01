@@ -42,6 +42,9 @@ class ProposalCommand extends Command
         $proposalScores = [];
         $prices = [];
         for ($i=1; $i<=3; $i++) {
+            $io->listing(['Dell - i7, Quadcore 2,3 GHz, full HD, 16 Gb RAM, energy star 100 certified',
+                'Lenovo - i5, Quadcore 2,2 GHz, full HD, 8 GB RAM, energy star 100 certified',
+                'Asus - i7, Quadcore 2,1 GHz, Ultra HD, 8 GB RAM, energy star 80 certified']);
             $pc = $io->choice('Choose pc to evaluate', ['Dell', 'Lenovo', 'Asus']);
             $prices[$pc] = (int)$io->ask("Enter price of product");
             $proposalScores[$pc] = $io->ask("Set scores for processor, screen, ram, certified");
