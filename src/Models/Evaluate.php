@@ -4,8 +4,9 @@
 namespace App\Models;
 
 
-class Score
+class Evaluate
 {
+    private $pcName;
 
     /**
      * @var int
@@ -27,6 +28,10 @@ class Score
      */
     private $certified;
 
+
+    private $price;
+
+
     /**
      * Score constructor.
      * @param int $processor
@@ -34,12 +39,28 @@ class Score
      * @param int $ram
      * @param int $certified
      */
-    public function __construct(int $processor, int $screen, int $ram, int $certified)
+    public function __construct(string $pcName,int $price, int $processor, int $screen, int $ram, int $certified)
     {
         $this->processor = $processor;
         $this->screen = $screen;
         $this->ram = $ram;
         $this->certified= $certified;
+        $this->pcName = $pcName;
+        $this->price = $price;
+    }
+
+
+    /**
+     * @return float
+     */
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+    public function getPcName(): string
+    {
+        return $this->pcName;
     }
 
     /**

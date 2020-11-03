@@ -12,9 +12,9 @@ trait PrepareDataTrait
      */
     public function prepareData($data): array
     {
+
         $explodeData = explode(',', $data);
         list($processor, $screenResolution, $ram, $certified) = $explodeData;
-
         return [
             'processor' => (int)$processor,
             'screenResolution' => (int)$screenResolution,

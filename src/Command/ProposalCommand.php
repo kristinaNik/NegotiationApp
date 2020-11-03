@@ -2,6 +2,8 @@
 
 namespace App\Command;
 
+use App\Services\ProposalCalculation;
+use App\Services\ProposalService;
 use App\Services\EvaluationService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,19 +17,28 @@ class ProposalCommand extends Command
      */
     protected static $defaultName = 'proposal:negotiate';
 
+
+    private $proposalCalcService;
+
     /**
-     * @var EvaluationService
+     * @var ProposalService
      */
+    private $proposalService;
+
     private $evaluationService;
 
     /**
      * ProposalCommand constructor.
+     * @param ProposalCalculation $proposalCalcService
      * @param EvaluationService $evaluationService
+     * @param ProposalService $proposalService
      */
-    public function __construct( EvaluationService $evaluationService)
+    public function __construct(ProposalCalculation $proposalCalcService, EvaluationService $evaluationService, ProposalService $proposalService)
     {
         parent::__construct();
+        $this->proposalCalcService = $proposalCalcService;
         $this->evaluationService = $evaluationService;
+        $this->proposalService = $proposalService;
     }
 
     /**
@@ -53,25 +64,22 @@ class ProposalCommand extends Command
             'Lenovo - i5, Quadcore 2,2 GHz, full HD, 8 GB RAM, energy star 100 certified- 2300 €',
             'Asus - i7, Quadcore 2,1 GHz, Ultra HD, 8 GB RAM, energy star 80 certified- 2000 €']);
 
-        $proposalScores = [];
-        $prices = [
-            'Dell' => 2500,
-            'Lenovo' => 2300,
-            'Asus' => 2000
-        ];
+        $proposals = [];
 
         for ($i=1; $i<=3; $i++) {
             $pc = $io->choice('Choose pc to evaluate', ['Dell', 'Lenovo', 'Asus']);
+            $prices = $io->ask('What is the pc price?');
             $scores = $io->ask("Set scores for processor, screen, ram, certified");
             if ($this->checkScoresIsValid($scores)) {
-                $proposalScores[$pc] = $scores;
+                $proposals[] = $this->proposalService->getProposals($pc, $scores,$prices);
             }
         }
 
-        $this->evaluationService->setScoreCriteria($proposalScores);
-        $getPrice = $this->evaluationService->calculatePrice($prices);
-        $getTotal = $this->evaluationService->calculateScoreTotal($getPrice);
-        $evaluate = $this->evaluationService->evaluateMaxScore($getTotal);
+
+        $evaluations = $this->evaluationService->getEvaluations($proposals);
+        $getTotal = $this->proposalCalcService->calculateProposalsTotal($evaluations);
+
+        $evaluate = $this->proposalCalcService->proposalMaxScore($getTotal);
 
         $io->success($this->displayResult($evaluate));
 

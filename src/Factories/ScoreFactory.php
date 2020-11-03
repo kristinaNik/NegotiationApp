@@ -3,7 +3,7 @@
 
 namespace App\Factories;
 
-use App\Models\Score;
+use App\Models\Evaluate;
 
 class ScoreFactory
 {
@@ -13,11 +13,11 @@ class ScoreFactory
      * @param $screen
      * @param $ram
      * @param $certified
-     * @return Score
+     * @return Evaluate
      */
-    public static function create($processor, $screen, $ram, $certified): Score
+    public static function create($pcName, $price, $processor, $screen, $ram, $certified): Evaluate
     {
-        return new Score($processor, $screen, $ram, $certified);
+        return new Evaluate($pcName, $price, $processor, $screen, $ram, $certified);
 
     }
 
